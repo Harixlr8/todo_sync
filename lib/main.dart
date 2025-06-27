@@ -16,35 +16,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      // theme: ThemeData.dark().copyWith(
-      //   scaffoldBackgroundColor: Colors.black,
-      //   floatingActionButtonTheme: FloatingActionButtonThemeData(
-      //     backgroundColor: const Color.fromARGB(255, 19, 97, 22),
-      //   ),
-      //   progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.green),
-      //   inputDecorationTheme: InputDecorationTheme(
-      //     filled: true,
-      //     fillColor: Colors.grey[900],
-      //     border: OutlineInputBorder(
-      //       borderRadius: BorderRadius.circular(12),
-      //       borderSide: BorderSide.none,
-      //     ),
-      //     contentPadding: const EdgeInsets.symmetric(
-      //       vertical: 16,
-      //       horizontal: 20,
-      //     ),
-      //   ),
-      //   elevatedButtonTheme: ElevatedButtonThemeData(
-      //     style: ElevatedButton.styleFrom(
-      //       backgroundColor: Colors.blue[800],
-      //       foregroundColor: Colors.white,
-      //       padding: const EdgeInsets.symmetric(vertical: 16),
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(12),
-      //       ),
-      //     ),
-      //   ),
-      // ),
       home: const LoginScreen(),
     );
   }
