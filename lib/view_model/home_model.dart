@@ -158,7 +158,6 @@ Future<void>shareTodoWithUser(String todoId,String sharedUserId) async{
   catch (e){
     print('Error Sharing $e');
   }
-
 }
 
   Future<void> signOut() async {

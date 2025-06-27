@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_with_firebase/view/login_screen.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -11,7 +11,6 @@ void main() async{
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +18,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.black,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: const Color.fromARGB(255, 19, 97, 22),
+        ),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.green),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.grey[900],

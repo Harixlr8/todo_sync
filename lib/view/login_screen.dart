@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_with_firebase/utils/colors.dart';
 import 'package:todo_with_firebase/view/signup_screen.dart';
 import 'package:todo_with_firebase/view_model/loginview_model.dart';
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -19,12 +19,22 @@ class LoginScreen extends StatelessWidget {
               child: Form(
                 key: viewModel.formKey,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.lock_outline, size: 80, color: Colors.deepPurpleAccent),
-                    const SizedBox(height: 20),
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundColor: AppColors().primary.withOpacity(0.2),
+                      child: const Icon(Icons.lock_outline, size: 48, color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
                     const Text(
                       'Welcome Back',
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Login to your account',
+                      style: TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 30),
                     TextFormField(
@@ -47,28 +57,27 @@ class LoginScreen extends StatelessWidget {
                       obscureText: true,
                     ),
                     const SizedBox(height: 24),
-                    viewModel.isLoading ? CupertinoActivityIndicator() :
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => viewModel.login(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurpleAccent,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    viewModel.isLoading
+                        ? const CupertinoActivityIndicator()
+                        : SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => viewModel.login(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors().primary,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              icon: const Icon(Icons.login),
+                              label: const Text('Login'),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen(),),);
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SignUpScreen()));
                       },
                       child: const Text(
                         'New User? SignUp!!',

@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_with_firebase/utils/colors.dart';
 import 'package:todo_with_firebase/view_model/home_model.dart';
 import 'package:todo_with_firebase/view_model/task_model.dart';
+import 'package:todo_with_firebase/widgets/customTextfield.dart';
 import '../model/todo_model.dart';
 
 class TaskDetailScreen extends StatefulWidget {
@@ -31,7 +33,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget build(BuildContext context) {
     // final viewModel = Provider.of<HomeViewModel>(context);
     // final currentUser = viewModel.user?.email;
-    final parentContext =context;
+    final parentContext = context;
 
     return Scaffold(
       appBar: AppBar(
@@ -80,16 +82,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(helperText: "Task"),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
+            CustomTextField(controller: _titleController, labelText: "Task"),
+            const SizedBox(height: 20),
+            CustomTextField(
               controller: _descController,
-              decoration: const InputDecoration(helperText: "Description"),
-              maxLines: 3,
+              labelText: "Description",
+              isMultiline: true,
             ),
             const SizedBox(height: 10),
             CheckboxListTile(
@@ -109,90 +109,112 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final viewModel = context.read<HomeViewModel>();
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors().primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final viewModel = context.read<HomeViewModel>();
 
-                final updatedTodo = widget.todo.copyWith(
-                  title: _titleController.text.trim(),
-                  description: _descController.text.trim(),
-                  isCompleted: _isCompleted,
-                  modifiedBy: viewModel.user?.displayName, //
-                );
+                      final updatedTodo = widget.todo.copyWith(
+                        title: _titleController.text.trim(),
+                        description: _descController.text.trim(),
+                        isCompleted: _isCompleted,
+                        modifiedBy: viewModel.user?.displayName, //
+                      );
 
-                await viewModel.updateTodo(updatedTodo);
-                Navigator.pop(context); //
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: const Text("Save Changes"),
-              ),
+                      await viewModel.updateTodo(updatedTodo);
+                      Navigator.pop(context); //
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: const Text("Save Changes"),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          final userId = Provider.of<HomeViewModel>(parentContext, listen: false).user?.uid;
-          if(userId != null){
+          final userId =
+              Provider.of<HomeViewModel>(
+                parentContext,
+                listen: false,
+              ).user?.uid;
+          if (userId != null) {
             _showShareUserListDialog(parentContext, widget.todo.id, userId);
           }
         },
         // child: Icon(Icons.share),
         label: Row(
-          children: [
-            Text("Share"),
-            SizedBox(width: 10,),
-            Icon(Icons.share)
-          ],
+          children: [Text("Share"), SizedBox(width: 10), Icon(Icons.share)],
         ),
       ),
     );
   }
 
-  void _showShareUserListDialog(BuildContext parentContext, String todoId, String currentUserId) async {
+  void _showShareUserListDialog(
+    BuildContext parentContext,
+    String todoId,
+    String currentUserId,
+  ) async {
     final getTaskModel = context.read<TaskDetailModel>();
-  final users = await  getTaskModel.getAllOtherUsers(currentUserId);
+    final users = await getTaskModel.getAllOtherUsers(currentUserId);
 
-  showDialog(
-    context: parentContext,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Select user to share with"),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: users.isEmpty
-              ? const Text("No other users found.")
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
-                    return ListTile(
-                      title: Text(user['email'] ?? ''),
-                      onTap: () async {
-                        await Provider.of<HomeViewModel>(parentContext, listen: false)
-                            .shareTodoWithUser(todoId, user['uid']!);
+    showDialog(
+      context: parentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Select user to share with"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child:
+                users.isEmpty
+                    ? const Text("No other users found.")
+                    : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        final user = users[index];
+                        return ListTile(
+                          title: Text(user['email'] ?? ''),
+                          onTap: () async {
+                            await Provider.of<HomeViewModel>(
+                              parentContext,
+                              listen: false,
+                            ).shareTodoWithUser(todoId, user['uid']!);
 
-                        Navigator.pop(context);
+                            Navigator.pop(context);
 
-                        ScaffoldMessenger.of(parentContext).showSnackBar(
-                          SnackBar(content: Text("Shared with ${user['email']}")),
+                            ScaffoldMessenger.of(parentContext).showSnackBar(
+                              SnackBar(
+                                content: Text("Shared with ${user['email']}"),
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-        ),
-        actions: [
-          TextButton(
-            child: const Text("Cancel"),
-            onPressed: () => Navigator.pop(context),
+                    ),
           ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: [
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

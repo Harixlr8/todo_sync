@@ -54,9 +54,9 @@ class LoginViewModel extends ChangeNotifier {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
-            (Route<dynamic> route) => false, // remove all previous routes
+            (Route<dynamic> route) => false, 
           );
-          // Navigate or perform post-login action
+
         }
       } catch (e) {
         ScaffoldMessenger.of(
@@ -76,7 +76,7 @@ class LoginViewModel extends ChangeNotifier {
           emailController.text.trim(),
           passwordController.text.trim(),
           displayNameController.text
-              .trim(), // assumes you have a controller for name
+              .trim(), 
         );
         if (user != null) {
           await saveUserToFireStore(user);
@@ -86,7 +86,7 @@ class LoginViewModel extends ChangeNotifier {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
-            (Route<dynamic> route) => false, // remove all previous routes
+            (Route<dynamic> route) => false, 
           );
         }
       } catch (e) {
