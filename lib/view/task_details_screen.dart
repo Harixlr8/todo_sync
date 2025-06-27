@@ -146,6 +146,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors().primary,
+        foregroundColor: Colors.white,
         onPressed: () {
           final userId =
               Provider.of<HomeViewModel>(
